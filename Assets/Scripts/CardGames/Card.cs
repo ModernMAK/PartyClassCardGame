@@ -1,42 +1,38 @@
 using System;
-using System.Globalization;
-using Localization;
+using Core;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace CardGames
 {
-    [Serializable]
-    public struct CardData
+    [CreateAssetMenu(menuName = "Card/Basic", fileName = "BasicCard.asset")]
+    public class Card : ScriptableObject, IEquatable<Card>, ICard
     {
-        public readonly string Name;
-        public readonly string Description;
-        public readonly int Cost;
+        [SerializeField] private string _name;
+        [SerializeField] private string _description;
+        [SerializeField] private int _cost;
+        [SerializeField] private Sprite _graphic;
 
-        public CardData(string name, string description, int cost)
-        {
-            Name = name;
-            Description = description;
-            Cost = cost;
-        }
-    }
-
-    public class Card : IEquatable<Card>
-    {
-        private readonly string _unlocalizedName;
-
-        public Card(string unlocalizedName)
-        {
-            _unlocalizedName = unlocalizedName;
-        }
-
-        public string UnlocalizedName => _unlocalizedName;
-        public string Name => GetName(CultureInfo.CurrentUICulture);
-        public string GetName(CultureInfo cultureInfo) => Cards.ResourceManager.GetString(UnlocalizedName, cultureInfo);
+        public string Name => _name;
+        public string Description => _description;
+        public int Cost => _cost;
+        public Sprite Graphic => _graphic;
 
         public virtual bool Equals(Card other)
         {
             if (other == null)
                 return false;
-            return UnlocalizedName.Equals(other.UnlocalizedName, StringComparison.Ordinal);
+            return Name.Equals(other.Name, StringComparison.Ordinal);
+        }
+
+        public ICard DeepClone()
+        {
+            var card = CreateInstance<Card>();
+            card._name = _name;
+            card._description = _description;
+            card._cost = _cost;
+            card._graphic = _graphic;
+            return card;
         }
 
         public override bool Equals(object obj)
@@ -49,23 +45,21 @@ namespace CardGames
 
         public override int GetHashCode()
         {
-            return _unlocalizedName.GetHashCode();
+            return Name.GetHashCode();
+        }
+
+        object IDeepCloneable.DeepClone()
+        {
+            return DeepClone();
         }
     }
 
-    public class CardBuilder
+    public interface ICard : IDeepCloneable<ICard>
     {
-        public string UnlocalizedName { get; set; }
-
-        public CardBuilder SetUnlocalizedName(string value)
-        {
-            UnlocalizedName = value;
-            return this;
-        }
-
-        public Card Create()
-        {
-            return new Card(UnlocalizedName);
-        }
+        string Name { get; }
+        string Description { get; }
+        int Cost { get; }
+        Sprite Graphic { get; }
+        
     }
 }

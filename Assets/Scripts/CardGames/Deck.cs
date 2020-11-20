@@ -1,19 +1,48 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Resources;
+using Core;
 using UnityEngine;
+
+namespace Core
+{
+    public interface ICloneable<T> : ICloneable
+    {
+        T Clone();
+    }
+
+    public interface IDeepCloneable
+    {
+        object DeepClone();
+    }
+
+    public interface IDeepCloneable<T> : IDeepCloneable
+    {
+        new T DeepClone();
+    }
+
+    public interface IShallowCloneable
+    {
+        object ShallowClone();
+    }
+
+    public interface IShallowCloneable<T> : IShallowCloneable
+    {
+        new T ShallowClone();
+    }
+}
 
 namespace CardGames
 {
-    public class Deck<T> : IList<T>
+    public class ListWrapper<T> : IList<T>
     {
         private readonly List<T> _internal;
 
-        public Deck(IEnumerable<T> items = null)
+        public ListWrapper(IEnumerable<T> items)
         {
             _internal = new List<T>(items);
         }
-
 
         public IEnumerator<T> GetEnumerator()
         {
@@ -74,6 +103,25 @@ namespace CardGames
             get => _internal[index];
             set => _internal[index] = value;
         }
+    }
+
+    public static class DeckUtility
+    {
+        public static Deck<T> DeepClone<T>(this Deck<T> deck) where T : IDeepCloneable<T>
+        {
+            var cloned = new T[deck.Count];
+            for (var i = 0; i < deck.Count; i++)
+                cloned[i] = (T) deck[i].DeepClone();
+            return new Deck<T>(cloned);
+        }
+    }
+
+    public class Deck<T> : ListWrapper<T>
+    {
+        public Deck(IEnumerable<T> items = null) : base(items)
+        {
+        }
+
 
         /// <summary>
         /// Draws the item at the specific index
@@ -116,7 +164,5 @@ namespace CardGames
                 this[j] = temp;
             }
         }
-
-        
     }
 }
