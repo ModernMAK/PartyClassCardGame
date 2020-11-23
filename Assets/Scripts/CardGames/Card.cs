@@ -13,10 +13,27 @@ namespace CardGames
         [SerializeField] private int _cost;
         [SerializeField] private Sprite _graphic;
 
-        public string Name => _name;
-        public string Description => _description;
-        public int Cost => _cost;
-        public Sprite Graphic => _graphic;
+        public string Name
+        {
+            get => _name;
+            protected set => _name = value; 
+        }
+
+        public string Description 
+        {
+            get => _description;
+            protected set => _description = value; 
+        }
+        public int Cost
+        {
+            get => _cost;
+            protected set => _cost = value; 
+        }
+        public Sprite Graphic 
+        {
+            get => _graphic;
+            protected set => _graphic = value; 
+        }
 
         public virtual bool Equals(Card other)
         {
@@ -25,13 +42,13 @@ namespace CardGames
             return Name.Equals(other.Name, StringComparison.Ordinal);
         }
 
-        public ICard DeepClone()
+        public virtual ICard DeepClone()
         {
             var card = CreateInstance<Card>();
-            card._name = _name;
-            card._description = _description;
-            card._cost = _cost;
-            card._graphic = _graphic;
+            card.Name = _name;
+            card.Description = _description;
+            card.Cost = _cost;
+            card.Graphic = _graphic;
             return card;
         }
 
@@ -52,14 +69,5 @@ namespace CardGames
         {
             return DeepClone();
         }
-    }
-
-    public interface ICard : IDeepCloneable<ICard>
-    {
-        string Name { get; }
-        string Description { get; }
-        int Cost { get; }
-        Sprite Graphic { get; }
-        
     }
 }
