@@ -1,16 +1,15 @@
 using System;
 using Core;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CardGames
 {
     [CreateAssetMenu(menuName = "Card/Basic", fileName = "BasicCard.asset")]
-    public class Card : ScriptableObject, IEquatable<Card>, ICard
+    public class CardSO : ScriptableObject, IEquatable<CardSO>, ICardReference
     {
-        [SerializeField] private string _name;
-        [SerializeField] private string _description;
-        [SerializeField] private int _cost;
+        [SerializeField] private string _name = "Default";
+        [SerializeField] private string _description = "Do Nothing";
+        [SerializeField] private int _cost = 0;
         [SerializeField] private Sprite _graphic;
 
         public string Name
@@ -32,24 +31,24 @@ namespace CardGames
         public Sprite Graphic 
         {
             get => _graphic;
-            protected set => _graphic = value; 
+            protected set => _graphic = value;
         }
 
-        public virtual bool Equals(Card other)
+        public virtual bool Equals(CardSO other)
         {
             if (other == null)
                 return false;
             return Name.Equals(other.Name, StringComparison.Ordinal);
         }
 
-        public virtual ICard DeepClone()
+        //var card = CreateInstance<Card>();
+        //Standard C#
+        //AssetDatabase.CreateAsset (card, path ending in .asset);
+
+
+        public virtual ICardInstance CreateInstance()
         {
-            var card = CreateInstance<Card>();
-            card.Name = _name;
-            card.Description = _description;
-            card.Cost = _cost;
-            card.Graphic = _graphic;
-            return card;
+            return new Card(this);
         }
 
         public override bool Equals(object obj)
@@ -57,17 +56,30 @@ namespace CardGames
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
             if (obj.GetType() != this.GetType()) return false;
-            return Equals((Card) obj);
+            return Equals((CardSO) obj);
         }
 
         public override int GetHashCode()
         {
             return Name.GetHashCode();
         }
-
-        object IDeepCloneable.DeepClone()
-        {
-            return DeepClone();
-        }
     }
+
+    public class Card : ICardInstance
+    {
+        public Card(ICardReference reference)
+        {
+            Reference = reference;
+            Cost = Reference.Cost;
+        }
+        
+        public ICardReference Reference { get; private set; }
+        public string Name => Reference.Name;
+        public string Description => Reference.Description;
+        public int Cost { get; set; }
+        public Sprite Graphic => Reference.Graphic;
+    }
+    
+    
+    
 }

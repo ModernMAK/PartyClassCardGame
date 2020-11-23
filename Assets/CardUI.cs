@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using CardGames;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class CardBehaviour : MonoBehaviour
+public class CardUI : MonoBehaviour
 {
-    
     [Header("Target")]
-    public Card _cardSO;
+    public CardSO cardSo;
 
-    private ICard _card;
+    private ICardInstance _card;
     [Header("UI Elements")]
     [SerializeField] private TMP_Text _nameText;
     [SerializeField] private TMP_Text _descriptionText;
@@ -30,9 +30,9 @@ public class CardBehaviour : MonoBehaviour
     {    
         if(_card == null)
         {            
-            if (_cardSO != null)
+            if (cardSo != null)
             {
-                _card = _cardSO;
+                _card = cardSo.CreateInstance();
             }
         }
         if(_card != null)
@@ -40,7 +40,13 @@ public class CardBehaviour : MonoBehaviour
         
     }
 
-    private void UpdateDisplay(ICard card)
+    public void SetCard(ICardInstance card)
+    {
+        _card = card;
+        UpdateDisplay(_card);
+    }
+
+    private void UpdateDisplay(ICardInstance card)
     {
         if(card == null)
             throw new NotImplementedException();

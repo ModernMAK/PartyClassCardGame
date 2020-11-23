@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using System.Resources;
-using UnityEngine;
 
 
 namespace CardGames
 {
-    public class Deck<T> : ListWrapper<T>
+    public class Deck<T> : EventList<T>
     {
-        public Deck(IEnumerable<T> items = null) : base(items)
+        public Deck() : base(){}
+        public Deck(IEnumerable<T> items) : base(items)
         {
         }
         
@@ -24,6 +24,12 @@ namespace CardGames
         /// <param name="item">The item to find.</param>
         /// <returns>The first item in the deck that matches the given item.</returns>
         public T Draw(T item) => this.PopFind(item);
+
+        public IEnumerable<T> DrawX(int count)
+        {
+            for (var i = 0; i < count; i++)
+                yield return Draw();
+        }
 
     }
 }

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 
 namespace CardGames
 {
-    public class Hand<T> : ListWrapper<T>
+    public class Hand<T> : EventList<T>
     {
-
-        public Hand(IEnumerable<T> items = null) : base(items)
-        {
-        }
+        public Hand() : base() { }
+        public Hand(IEnumerable<T> items) : base(items) { }
     }
 }
