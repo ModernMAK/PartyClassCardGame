@@ -19,6 +19,12 @@ public class DrawButtonDebug : MonoBehaviour
 
     private void DrawClick()
     {
+        if (Field.DrawPile.Count == 0)
+        {
+            Field.DrawPile.AddRange(Field.DiscardPile.PopClear());
+            Field.DrawPile.UnityShuffle();
+        }
+
         if (Field.DrawPile.Count > 0)
         {
             var draw = Field.DrawPile.Draw();

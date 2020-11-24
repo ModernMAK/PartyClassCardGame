@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Core;
 
@@ -95,6 +96,13 @@ namespace CardGames
         // PUSH
         public static void PushFirst<T>(this IList<T> list, T item) => list.Insert(0, item);
         public static void PushLast<T>(this IList<T> list, T item) => list.Add(item);
+        public static void PushLast<T>(this IList<T> list, IEnumerable<T> range)
+        {
+            foreach (var item in range)
+            {
+                list.PushLast(item);
+            }
+        }
 
 
         // POP
@@ -112,6 +120,18 @@ namespace CardGames
         }
 
         public static T PopFirst<T>(this IList<T> list) => PopAt(list, 0);
-        public static T PopLast<T>(this IList<T> list) => PopAt(list, list.Count);
+        public static T PopLast<T>(this IList<T> list) => PopAt(list, list.Count-1);
+
+        public static IEnumerable<T> PopClear<T>(this IList<T> list)
+        {
+            while (list.Count > 0)
+                yield return list.PopFirst();
+        }
+
+        public static void AddRange<T>(this IList<T> list, IEnumerable<T> items)
+        {
+            foreach (var i in items)
+                list.Add(i);
+        }
     }
 }

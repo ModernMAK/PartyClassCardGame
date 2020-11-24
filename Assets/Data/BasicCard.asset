@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 754fc09af0d2416489b722efc2359ca6, type: 3}
   m_Name: BasicCard
   m_EditorClassIdentifier: 
-  _name: 
-  _description: 
+  _name: Test
+  _description: Do Nothing
   _cost: 0
-  _graphic: {fileID: 0}
+  _graphic: {fileID: 3677357400098522260, guid: 55accf7df18c9bb49878af709accbce2, type: 3}
