@@ -64,22 +64,4 @@ namespace CardGames
             return Name.GetHashCode();
         }
     }
-
-    public class Card : ICardInstance
-    {
-        public Card(ICardReference reference)
-        {
-            Reference = reference;
-            Cost = Reference.Cost;
-        }
-        
-        public ICardReference Reference { get; private set; }
-        public string Name => Reference.Name;
-        public string Description => Reference.Description;
-        public int Cost { get; set; }
-        public Sprite Graphic => Reference.Graphic;
-    }
-    
-    
-    
 }

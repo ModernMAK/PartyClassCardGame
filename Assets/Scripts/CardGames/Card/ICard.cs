@@ -10,14 +10,10 @@ namespace CardGames
         int Cost { get; }
         Sprite Graphic { get; }
     }
-    public interface ICardReference : IInstancable<ICardInstance>, ICard
-    {
-    }
-
-    public interface ICardInstance : IReferencable<ICardReference>, ICard
-    {
-        new int Cost { get; set; }
-    }
 
 
+    //    public class TeamTargetter<TTUnit> : ITargetter<TTUnit>
+//    {
+//        
+//    }
 }
